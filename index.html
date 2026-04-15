@@ -43,20 +43,7 @@
     padding-bottom: 2rem;
     border-bottom: 1px solid var(--border);
   }
-  .shield-icon {
-    width: 52px; height: 52px;
-    background: var(--green-dark);
-    clip-path: polygon(50% 0%, 100% 15%, 100% 60%, 50% 100%, 0% 60%, 0% 15%);
-    display: inline-flex; align-items: center; justify-content: center;
-    margin-bottom: 1rem;
-    position: relative;
-  }
-  .shield-icon::after {
-    content: '';
-    width: 20px; height: 20px;
-    background: var(--gold);
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-  }
+
   .header h1 {
     font-family: 'Playfair Display', serif;
     font-size: clamp(1.6rem, 4vw, 2.2rem);
@@ -79,24 +66,23 @@
     background: var(--green-dark);
     color: #fff;
     border-radius: 10px;
-    padding: 1rem 1.4rem;
-    margin-bottom: 1.5rem;
+    padding: 10px 16px;
+    margin-bottom: 1.25rem;
     display: flex;
     align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
+    gap: 10px;
   }
   .leader-crown {
-    width: 32px; height: 32px; flex-shrink: 0;
+    width: 20px; height: 20px; flex-shrink: 0;
     background: var(--gold);
     clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
   }
-  .leader-text { flex: 1; min-width: 200px; }
-  .leader-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: var(--gold-light); }
-  .leader-detail { font-size: 0.8rem; color: rgba(255,255,255,0.65); margin-top: 2px; }
-  .leader-pts { text-align: right; }
-  .leader-pts-num { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--gold); }
-  .leader-pts-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); }
+  .leader-text { flex: 1; }
+  .leader-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 600; color: var(--gold-light); }
+  .leader-detail { font-size: 0.75rem; color: rgba(255,255,255,0.55); }
+  .leader-pts { text-align: right; white-space: nowrap; }
+  .leader-pts-num { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--gold); }
+  .leader-pts-label { font-size: 0.7rem; color: rgba(255,255,255,0.45); }
 
   /* Stats row */
   .stats {
@@ -232,7 +218,7 @@
   @media (max-width: 600px) {
     body { padding: 1rem 0.5rem; }
     .header h1 { font-size: 1.4rem; }
-    .leader-banner { padding: 10px 12px; }
+    .leader-banner { padding: 8px 12px; }
     .season-bar { padding: 8px 12px; }
     .season-val { font-size: 1rem; }
     table { font-size: 0.75rem; min-width: unset; }
@@ -267,17 +253,13 @@
   .footer a { color: var(--green-mid); text-decoration: none; }
   .footer a:hover { text-decoration: underline; }
 
-  @media (max-width: 480px) {
-    .leader-banner { flex-direction: column; text-align: center; }
-    .leader-pts { text-align: center; }
-  }
+
 </style>
 </head>
 <body>
 <div class="page">
 
   <div class="header">
-    <div class="shield-icon"></div>
     <h1>Carpe Diem Shield</h1>
     <p class="header-sub">Golf League Leaderboard</p>
   </div>
