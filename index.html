@@ -202,6 +202,21 @@
   .badge-down { background: #fee2e2; color: #991b1b; }
   .badge-same { background: #f3f4f6; color: #6b7280; }
 
+  .season-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    margin-bottom: 1.25rem;
+  }
+  .season-item { flex: 1; text-align: center; }
+  .season-label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 4px; }
+  .season-val { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; color: var(--green-dark); }
+  .season-divider { width: 1px; background: var(--border); height: 36px; flex-shrink: 0; }
+
   /* Loading / error states */
   .state-msg {
     text-align: center;
@@ -253,6 +268,18 @@
   </div>
 
 
+
+  <div class="season-bar">
+    <div class="season-item">
+      <span class="season-label">Season ends</span>
+      <span class="season-val" id="season-end-date">—</span>
+    </div>
+    <div class="season-divider"></div>
+    <div class="season-item">
+      <span class="season-label">Days remaining</span>
+      <span class="season-val" id="season-days">—</span>
+    </div>
+  </div>
 
   <div class="controls">
     <input class="search" type="text" id="search" placeholder="Search player name…" />
@@ -412,6 +439,19 @@ function render() {
     </tr>`;
   }).join('');
 }
+
+function updateSeasonCountdown() {
+  const now = new Date();
+  let endYear = now.getFullYear();
+  if (now.getMonth() >= 7) endYear += 1; // August (0-indexed) or later → next year
+  const endDate = new Date(endYear, 6, 31); // July 31
+  const diffMs = endDate - now;
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  document.getElementById('season-end-date').textContent =
+    endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  document.getElementById('season-days').textContent = diffDays.toLocaleString();
+}
+updateSeasonCountdown();
 
 document.getElementById('search').addEventListener('input', e => {
   query = e.target.value.toLowerCase();
