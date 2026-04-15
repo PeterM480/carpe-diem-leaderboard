@@ -186,7 +186,6 @@
   .medal-2 { background: #eef0f2; color: #4a5568; border: 1.5px solid #9aa4b2; }
   .medal-3 { background: #f5ede6; color: #7a4020; border: 1.5px solid #b87c50; }
 
-  .prev-cell { color: var(--text-muted); font-size: 0.8rem; text-align: center; }
 
   .name-cell { font-weight: 500; font-size: 0.95rem; }
 
@@ -242,7 +241,6 @@
     .name-cell { font-size: 0.78rem; max-width: 100px; overflow: hidden; text-overflow: ellipsis; }
     .medal-circle { width: 20px; height: 20px; font-size: 0.65rem; }
     .hcp-cell { font-size: 0.72rem; }
-    .prev-cell { font-size: 0.72rem; }
     .arrow { font-size: 0.6rem; }
   }
 
@@ -320,10 +318,9 @@
       <thead>
         <tr>
           <th data-col="pos" class="sorted" onclick="sortBy('pos')">Pos <span class="si" id="si-pos">▲</span></th>
-          <th data-col="prev" onclick="sortBy('prev')">Prev <span class="si" id="si-prev">↕</span></th>
           <th data-col="name" onclick="sortBy('name')">Player <span class="si" id="si-name">↕</span></th>
           <th data-col="pts" onclick="sortBy('pts')" style="text-align:right;">Points <span class="si" id="si-pts">↕</span></th>
-          <th data-col="hcp" onclick="sortBy('hcp')" style="text-align:right;">Hcp Idx <span class="si" id="si-hcp">↕</span></th>
+          <th data-col="hcp" onclick="sortBy('hcp')" style="text-align:right;">H.Idx <span class="si" id="si-hcp">↕</span></th>
           <th data-col="gap" onclick="sortBy('gap')" style="text-align:right;">Gap <span class="si" id="si-gap">↕</span></th>
 
         </tr>
@@ -423,7 +420,7 @@ function sortBy(col) {
 }
 
 function render() {
-  const cols = ['pos','prev','name','pts','hcp','gap'];
+  const cols = ['pos','name','pts','hcp','gap'];
   cols.forEach(c => {
     const si = document.getElementById('si-' + c);
     const th = document.querySelector(`[data-col="${c}"]`);
@@ -465,7 +462,6 @@ function render() {
 
     return `<tr class="${rankClass}">
       <td class="pos-cell">${posHtml} ${arrow}</td>
-      <td class="prev-cell">${p.prev}</td>
       <td class="name-cell">${p.name}</td>
       <td class="pts-cell" style="text-align:right;">${ptsHtml}</td>
       <td class="hcp-cell">${p.hcp.toFixed(1)}</td>
