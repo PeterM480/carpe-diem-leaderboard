@@ -280,6 +280,11 @@
 
   <div class="season-bar">
     <div class="season-item">
+      <span class="season-label">Shield holder</span>
+      <span class="season-val" id="shield-holder">Sean Kerns</span>
+    </div>
+    <div class="season-divider"></div>
+    <div class="season-item">
       <span class="season-label">Season ends</span>
       <span class="season-val" id="season-end-date">—</span>
     </div>
@@ -290,10 +295,7 @@
     </div>
   </div>
 
-  <div class="controls">
-    <input class="search" type="text" id="search" placeholder="Search player name…" />
-    <span class="results-count" id="results-count"></span>
-  </div>
+
 
   <div class="table-wrap">
     <table>
@@ -370,6 +372,8 @@ async function loadData() {
     allPlayers.forEach(p => p.move = p.prev - p.pos);
     const topPts = Math.max(...allPlayers.map(p => p.pts));
     allPlayers.forEach(p => p.gap = p.pts > 0 ? topPts - p.pts : null);
+    const shEl = document.getElementById('shield-holder');
+    if (shEl && allPlayers[0]) shEl.textContent = allPlayers[0].name;
     populateBanner();
     render();
     document.getElementById('footer-updated').textContent =
@@ -411,15 +415,14 @@ function render() {
     th.classList.toggle('sorted', c === sortCol);
   });
 
-  let rows = allPlayers.filter(p => p.name.toLowerCase().includes(query));
+  let rows = allPlayers.slice();
   rows = rows.slice().sort((a,b) => {
     let av = a[sortCol], bv = b[sortCol];
     if (typeof av === 'string') return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
     return sortAsc ? av - bv : bv - av;
   });
 
-  const count = document.getElementById('results-count');
-  count.textContent = query ? `${rows.length} of ${allPlayers.length} players` : '';
+
 
   if (!rows.length) {
     document.getElementById('tbody').innerHTML =
@@ -465,10 +468,7 @@ function updateSeasonCountdown() {
 }
 updateSeasonCountdown();
 
-document.getElementById('search').addEventListener('input', e => {
-  query = e.target.value.toLowerCase();
-  render();
-});
+
 
 loadData();
 </script>
