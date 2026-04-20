@@ -324,6 +324,9 @@
           <th class="landscape-only" data-col="hcpBF" onclick="sortBy('hcpBF')" style="text-align:right;">HI B/F <span class="si" id="si-hcpBF">↕</span></th>
           <th class="landscape-only" data-col="hcpChg" onclick="sortBy('hcpChg')" style="text-align:right;">HI Chg <span class="si" id="si-hcpChg">↕</span></th>
           <th class="landscape-only" data-col="hcp" onclick="sortBy('hcp')" style="text-align:right;">HI Cur <span class="si" id="si-hcp">↕</span></th>
+          <th class="landscape-only" data-col="lowPts" onclick="sortBy('lowPts')" style="text-align:right;">Low pts <span class="si" id="si-lowPts">↕</span></th>
+          <th class="landscape-only" data-col="highPts" onclick="sortBy('highPts')" style="text-align:right;">High pts <span class="si" id="si-highPts">↕</span></th>
+          <th class="landscape-only" data-col="lastCard" onclick="sortBy('lastCard')">Last card <span class="si" id="si-lastCard">↕</span></th>
 
         </tr>
       </thead>
@@ -391,6 +394,9 @@ async function loadData() {
       ptsChg: parseFloat(r['Points Chg'] || 0),
       hcpBF:  parseFloat(r['Hcp BF'] || 0),
       hcpChg: parseFloat(r['Hcp Chg'] || 0),
+      lowPts:  r['Low Pts'] || '',
+      highPts: r['High Pts'] || '',
+      lastCard: r['Last Card'] || '',
     })).filter(p => p.name);
     allPlayers.forEach(p => p.move = p.prev - p.pos);
 
@@ -434,7 +440,7 @@ function sortBy(col) {
 }
 
 function render() {
-  const cols = ['pos','name','rounds','pts','ptsChg','hcpBF','hcpChg','hcp'];
+  const cols = ['pos','name','rounds','pts','ptsChg','hcpBF','hcpChg','hcp','lowPts','highPts','lastCard'];
   cols.forEach(c => {
     const si = document.getElementById('si-' + c);
     const th = document.querySelector(`[data-col="${c}"]`);
@@ -482,6 +488,9 @@ function render() {
       <td class="landscape-only" style="text-align:right;">${p.hcpBF.toFixed(1)}</td>
       <td class="landscape-only" style="text-align:right; color:${p.hcpChg > 0 ? '#2d6a4f' : p.hcpChg < 0 ? '#991b1b' : 'var(--text-muted)'};">${p.hcpChg === 0 ? '—' : (p.hcpChg > 0 ? '+' : '') + p.hcpChg.toFixed(1)}</td>
       <td class="landscape-only" style="text-align:right;">${p.hcp.toFixed(1)}</td>
+      <td class="landscape-only" style="text-align:right;">${p.lowPts !== '' ? p.lowPts : '—'}</td>
+      <td class="landscape-only" style="text-align:right;">${p.highPts !== '' ? p.highPts : '—'}</td>
+      <td class="landscape-only" style="font-size:0.72rem;">${p.lastCard || '—'}</td>
     </tr>`;
   }).join('');
 }
