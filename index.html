@@ -215,12 +215,14 @@
 
 
 
-  .landscape-only { display: none; }
-  @media (max-width: 600px) and (orientation: landscape) {
+  .landscape-only { display: table-cell; }
+  @media (orientation: portrait) and (max-width: 900px) {
+    .landscape-only { display: none; }
+  }
+  @media (orientation: landscape) and (max-width: 900px) {
     .landscape-only { display: table-cell; }
-    .portrait-hide  { display: none; }
-    table { font-size: 0.7rem; }
-    td, thead th { padding: 7px 6px; }
+    table { font-size: 0.72rem; }
+    td, thead th { padding: 7px 5px; }
   }
   @media (max-width: 600px) {
     body { padding: 1rem 0.5rem; }
