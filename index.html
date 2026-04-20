@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carpe Diem Shield — Leaderboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-dark:  #1a3a2a;
+    --green-mid:   #2d6a4f;
+    --green-light: #40916c;
+    --green-pale:  #d8f3dc;
+    --gold:        #c9a84c;
+    --gold-light:  #f4e4a6;
+    --silver:      #9aa4b2;
+    --bronze:      #b87c50;
+    --off-white:   #f7f5f0;
+    --text-dark:   #1a1a1a;
+    --text-mid:    #4a4a4a;
+    --text-muted:  #8a8a8a;
+    --border:      rgba(0,0,0,0.08);
+    --row-hover:   rgba(45,106,79,0.04);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--off-white);
+    color: var(--text-dark);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .page { max-width: 820px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 700;
+    color: var(--green-dark);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+  }
+  .header-sub {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Leader banner */
+  .leader-banner {
+    background: var(--green-dark);
+    color: #fff;
+    border-radius: 10px;
+    padding: 10px 16px;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .leader-crown {
+    width: 20px; height: 20px; flex-shrink: 0;
+    background: var(--gold);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+  .leader-text { flex: 1; }
+  .leader-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 600; color: var(--gold-light); }
+  .leader-detail { font-size: 0.75rem; color: rgba(255,255,255,0.55); }
+  .leader-pts { text-align: right; white-space: nowrap; }
+  .leader-pts-num { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--gold); }
+  .leader-pts-label { font-size: 0.7rem; color: rgba(255,255,255,0.45); }
+
+  /* Stats row */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+  .stat {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    text-align: center;
+  }
+  .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .stat-val { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; color: var(--green-dark); }
+
+  /* Controls */
+  .controls { display: flex; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+  .search {
+    flex: 1; min-width: 180px;
+    padding: 8px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text-dark);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search:focus { border-color: var(--green-light); }
+  .search::placeholder { color: var(--text-muted); }
+  .results-count { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; }
+
+  /* Table */
+  .table-wrap {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; min-width: 500px; }
+
+  thead th {
+    padding: 10px 14px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    background: #fafaf8;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition: color 0.15s;
+  }
+  thead th:hover { color: var(--green-mid); }
+  thead th.sorted { color: var(--green-dark); }
+  thead th .si { margin-left: 3px; font-size: 8px; }
+
+  tbody tr { transition: background 0.12s; }
+  tbody tr:nth-child(even):not(.rank-1) td { background: #fafaf8; }
+  tbody tr:nth-child(even):not(.rank-1):hover td { background: var(--row-hover); }
+  tbody tr:hover { background: var(--row-hover); }
+  tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
+
+  td { padding: 14px 16px; font-size: 0.9rem; color: var(--text-dark); vertical-align: middle; white-space: nowrap; }
+
+  /* Top 3 row accents */
+  tr.rank-1 td:first-child { border-left: 3px solid var(--gold); }
+  tr.rank-2 td:first-child { border-left: 3px solid var(--silver); }
+  tr.rank-3 td:first-child { border-left: 3px solid var(--bronze); }
+
+  .pos-cell { font-weight: 500; min-width: 52px; }
+  .medal-circle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 50%;
+    font-size: 0.75rem; font-weight: 600; font-family: 'DM Sans', sans-serif;
+    vertical-align: middle;
+  }
+  .medal-1 { background: #f4e4a6; color: #7a5c0a; border: 1.5px solid #c9a84c; }
+  .medal-2 { background: #eef0f2; color: #4a5568; border: 1.5px solid #9aa4b2; }
+  .medal-3 { background: #f5ede6; color: #7a4020; border: 1.5px solid #b87c50; }
+
+
+  .name-cell { font-weight: 500; font-size: 0.95rem; }
+
+  .pts-cell { text-align: right; font-weight: 500; font-family: 'DM Sans', sans-serif; }
+  .pts-zero { color: var(--text-muted); font-weight: 300; }
+
+  .hcp-cell { text-align: right; color: var(--text-mid); font-size: 0.82rem; }
+
+  .arrow { font-size: 0.7rem; margin-left: 4px; }
+  .arrow-up   { color: #2d6a4f; }
+  .arrow-down { color: #991b1b; }
+  .arrow-same { color: var(--text-muted); font-size: 0.8rem; }
+  .badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 99px;
+  }
+  .badge-up   { background: #d8f3dc; color: #2d6a4f; }
+  .badge-down { background: #fee2e2; color: #991b1b; }
+  .badge-same { background: #f3f4f6; color: #6b7280; }
+
+  .season-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    margin-bottom: 1.25rem;
+  }
+  .season-item { flex: 1; text-align: center; }
+  .season-label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 4px; }
+  .season-val { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; color: var(--green-dark); }
+  .season-divider { width: 1px; background: var(--border); height: 36px; flex-shrink: 0; }
+
+  .rank-1 td { background: #fffbf0; }
+  .rank-1:hover td { background: #fff6e0; }
+
+
+
+  .landscape-only { display: none; }
+  @media (max-width: 600px) and (orientation: landscape) {
+    .landscape-only { display: table-cell; }
+    .portrait-hide  { display: none; }
+    table { font-size: 0.7rem; }
+    td, thead th { padding: 7px 6px; }
+  }
+  @media (max-width: 600px) {
+    body { padding: 1rem 0.5rem; }
+    .header h1 { font-size: 1.4rem; }
+    .leader-banner { padding: 8px 12px; }
+    .season-bar { padding: 8px 12px; }
+    .season-val { font-size: 1rem; }
+    table { font-size: 0.75rem; min-width: unset; }
+    td { padding: 10px 7px; white-space: nowrap; }
+    thead th { padding: 8px 7px; font-size: 0.65rem; }
+    .name-cell { font-size: 0.78rem; max-width: 100px; overflow: hidden; text-overflow: ellipsis; }
+    .medal-circle { width: 20px; height: 20px; font-size: 0.65rem; }
+    .hcp-cell { font-size: 0.72rem; }
+    .arrow { font-size: 0.6rem; }
+  }
+
+  /* Loading / error states */
+  .state-msg {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  .state-msg strong { display: block; font-size: 1rem; color: var(--text-dark); margin-bottom: 0.5rem; }
+
+  /* Footer */
+  .footer {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+  .footer a { color: var(--green-mid); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <h1>Carpe Diem Shield</h1>
+    <p class="header-sub">Golf League Leaderboard</p>
+  </div>
+
+  <div class="leader-banner" id="leader-banner" style="display:none;">
+    <div class="leader-crown"></div>
+    <div class="leader-text">
+      <div class="leader-name" id="leader-name">—</div>
+      <div class="leader-detail" id="leader-detail">Current leader</div>
+    </div>
+    <div class="leader-pts">
+      <div class="leader-pts-num" id="leader-pts">—</div>
+      <div class="leader-pts-label">Carpe Diem points</div>
+    </div>
+  </div>
+
+
+
+  <div class="season-bar">
+    <div class="season-item">
+      <span class="season-label">Shield holder</span>
+      <span class="season-val" id="shield-holder">Sean Kerns</span>
+    </div>
+    <div class="season-divider"></div>
+    <div class="season-item">
+      <span class="season-label">Season ends</span>
+      <span class="season-val" id="season-end-date">—</span>
+    </div>
+    <div class="season-divider"></div>
+    <div class="season-item">
+      <span class="season-label">Days remaining</span>
+      <span class="season-val" id="season-days">—</span>
+    </div>
+  </div>
+
+
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-col="pos" class="sorted" onclick="sortBy('pos')">Pos <span class="si" id="si-pos">▲</span></th>
+          <th data-col="name" onclick="sortBy('name')">Player <span class="si" id="si-name">↕</span></th>
+          <th data-col="pts" onclick="sortBy('pts')" style="text-align:right;">Points <span class="si" id="si-pts">↕</span></th>
+          <th data-col="hcp" onclick="sortBy('hcp')" style="text-align:right;">H.Idx <span class="si" id="si-hcp">↕</span></th>
+          <th data-col="gap" onclick="sortBy('gap')" style="text-align:right;">Gap <span class="si" id="si-gap">↕</span></th>
+          <th class="landscape-only" data-col="rounds" onclick="sortBy('rounds')" style="text-align:right;">Rnds <span class="si" id="si-rounds">↕</span></th>
+          <th class="landscape-only" data-col="ptsBF" onclick="sortBy('ptsBF')" style="text-align:right;">Pts B/F <span class="si" id="si-ptsBF">↕</span></th>
+          <th class="landscape-only" data-col="ptsChg" onclick="sortBy('ptsChg')" style="text-align:right;">Pts Chg <span class="si" id="si-ptsChg">↕</span></th>
+          <th class="landscape-only" data-col="hcpBF" onclick="sortBy('hcpBF')" style="text-align:right;">Hcp B/F <span class="si" id="si-hcpBF">↕</span></th>
+          <th class="landscape-only" data-col="hcpChg" onclick="sortBy('hcpChg')" style="text-align:right;">Hcp Chg <span class="si" id="si-hcpChg">↕</span></th>
+
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="5" class="state-msg">Loading leaderboard data…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <span id="footer-updated">—</span>
+    <span>Data source: <code>leaderboard_data.csv</code></span>
+  </div>
+
+</div>
+
+<script>
+/* ─── CONFIG ───────────────────────────────────────────────
+   Change CSV_FILE to match the name of your CSV export.
+   Place the CSV in the same folder as this HTML file.
+──────────────────────────────────────────────────────────── */
+const CSV_FILE = 'leaderboard_data.csv';
+
+let allPlayers = [];
+let sortCol = 'pos';
+let sortAsc = true;
+let query = '';
+
+/* ─── CSV PARSER ─────────────────────────────────────────── */
+function parseCSV(text) {
+  const lines = text.trim().split('\n').filter(l => l.trim());
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.trim());
+  return lines.slice(1).map(line => {
+    // handle commas within quoted fields
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let ch of line) {
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+      else cur += ch;
+    }
+    cols.push(cur.trim());
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = cols[i] || '');
+    return obj;
+  });
+}
+
+/* ─── LOAD CSV ───────────────────────────────────────────── */
+async function loadData() {
+  try {
+    const res = await fetch(CSV_FILE + '?v=' + Date.now());
+    if (!res.ok) throw new Error('File not found');
+    const text = await res.text();
+    const rows = parseCSV(text);
+    allPlayers = rows.map(r => ({
+      pos:    parseInt(r['Pos Now'] || r['Pos'] || 0),
+      prev:   parseInt(r['Pos Prev'] || r['Prev'] || 0),
+      name:   r['Player Name'] || r['Player'] || '',
+      pts:    parseFloat(r['Carpe Diem Points'] || r['Points'] || 0),
+      hcp:    parseFloat(r['Handicap Index'] || r['Hcp'] || 0),
+      rounds: parseInt(r['Rounds Played'] || 0),
+      ptsBF:  parseFloat(r['Points BF'] || 0),
+      ptsChg: parseFloat(r['Points Chg'] || 0),
+      hcpBF:  parseFloat(r['Hcp BF'] || 0),
+      hcpChg: parseFloat(r['Hcp Chg'] || 0),
+    })).filter(p => p.name);
+    allPlayers.forEach(p => p.move = p.prev - p.pos);
+    const topPts = Math.max(...allPlayers.map(p => p.pts));
+    allPlayers.forEach(p => p.gap = p.pts > 0 ? topPts - p.pts : null);
+    const shEl = document.getElementById('shield-holder');
+    if (shEl && allPlayers[0]) shEl.textContent = allPlayers[0].name;
+    populateBanner();
+    render();
+    document.getElementById('footer-updated').textContent =
+      'Last loaded: ' + new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  } catch (e) {
+    document.getElementById('tbody').innerHTML =
+      `<tr><td colspan="5" class="state-msg">
+        <strong>Could not load leaderboard data</strong>
+        Make sure <code>${CSV_FILE}</code> is in the same folder as this HTML file,
+        and that you're serving via a web server (not just opening the file locally).
+      </td></tr>`;
+  }
+}
+
+function populateBanner() {
+  const leader = allPlayers.slice().sort((a,b) => b.pts - a.pts)[0];
+  if (!leader) return;
+  document.getElementById('leader-name').textContent = leader.name;
+  document.getElementById('leader-pts').textContent = leader.pts.toFixed(2);
+  document.getElementById('leader-banner').style.display = 'flex';
+}
+
+
+
+/* ─── SORT & RENDER ─────────────────────────────────────── */
+function sortBy(col) {
+  if (sortCol === col) sortAsc = !sortAsc;
+  else { sortCol = col; sortAsc = col === 'name'; }
+  render();
+}
+
+function render() {
+  const cols = ['pos','name','pts','hcp','gap','rounds','ptsBF','ptsChg','hcpBF','hcpChg'];
+  cols.forEach(c => {
+    const si = document.getElementById('si-' + c);
+    const th = document.querySelector(`[data-col="${c}"]`);
+    if (!si || !th) return;
+    si.textContent = c === sortCol ? (sortAsc ? '▲' : '▼') : '↕';
+    th.classList.toggle('sorted', c === sortCol);
+  });
+
+  let rows = allPlayers.slice();
+  rows = rows.slice().sort((a,b) => {
+    let av = a[sortCol], bv = b[sortCol];
+    if (typeof av === 'string') return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+    return sortAsc ? av - bv : bv - av;
+  });
+
+
+
+  if (!rows.length) {
+    document.getElementById('tbody').innerHTML =
+      `<tr><td colspan="5" class="state-msg">No players match "${query}"</td></tr>`;
+    return;
+  }
+
+  document.getElementById('tbody').innerHTML = rows.map(p => {
+    const rankClass = p.pos === 1 ? 'rank-1' : p.pos === 2 ? 'rank-2' : p.pos === 3 ? 'rank-3' : '';
+    let posHtml;
+    if (p.pos === 1) posHtml = `<span class="medal-circle medal-1">1</span>`;
+    else if (p.pos === 2) posHtml = `<span class="medal-circle medal-2">2</span>`;
+    else if (p.pos === 3) posHtml = `<span class="medal-circle medal-3">3</span>`;
+    else posHtml = `<span style="font-size:0.85rem;color:var(--text-muted);padding-left:4px;">${p.pos}</span>`;
+    let arrow = '';
+    if (p.move > 0)      arrow = `<span class="arrow arrow-up" title="Up ${p.move}">▲</span>`;
+    else if (p.move < 0) arrow = `<span class="arrow arrow-down" title="Down ${Math.abs(p.move)}">▼</span>`;
+    else                 arrow = `<span class="arrow arrow-same">–</span>`;
+    const ptsHtml = p.pts > 0
+      ? `<span>${p.pts.toFixed(2)}</span>`
+      : `<span class="pts-zero">—</span>`;
+
+    return `<tr class="${rankClass}">
+      <td class="pos-cell">${posHtml} ${arrow}</td>
+      <td class="name-cell">${p.name}</td>
+      <td class="pts-cell" style="text-align:right;">${ptsHtml}</td>
+      <td class="hcp-cell">${p.hcp.toFixed(1)}</td>
+      <td class="gap-cell" style="text-align:right; color: var(--text-muted); font-size:0.85rem;">${p.gap === null ? '—' : p.gap === 0 ? '<span style=\"color:var(--gold);font-weight:500;\">Leader</span>' : '-' + p.gap.toFixed(2)}</td>
+      <td class="landscape-only" style="text-align:right;">${p.rounds}</td>
+      <td class="landscape-only" style="text-align:right;">${p.ptsBF.toFixed(2)}</td>
+      <td class="landscape-only" style="text-align:right; color:${p.ptsChg > 0 ? '#2d6a4f' : p.ptsChg < 0 ? '#991b1b' : 'var(--text-muted)'};">${p.ptsChg === 0 ? '—' : (p.ptsChg > 0 ? '+' : '') + p.ptsChg.toFixed(3)}</td>
+      <td class="landscape-only" style="text-align:right;">${p.hcpBF.toFixed(1)}</td>
+      <td class="landscape-only" style="text-align:right; color:${p.hcpChg > 0 ? '#2d6a4f' : p.hcpChg < 0 ? '#991b1b' : 'var(--text-muted)'};">${p.hcpChg === 0 ? '—' : (p.hcpChg > 0 ? '+' : '') + p.hcpChg.toFixed(1)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function updateSeasonCountdown() {
+  const now = new Date();
+  let endYear = now.getFullYear();
+  if (now.getMonth() >= 7) endYear += 1; // August (0-indexed) or later → next year
+  const endDate = new Date(endYear, 6, 31); // July 31
+  const diffMs = endDate - now;
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  document.getElementById('season-end-date').textContent =
+    endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  document.getElementById('season-days').textContent = diffDays.toLocaleString();
+}
+updateSeasonCountdown();
+
+
+
+loadData();
+</script>
+</body>
+</html>
