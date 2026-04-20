@@ -321,9 +321,9 @@
           <th data-col="pts" onclick="sortBy('pts')" style="text-align:right;">Points <span class="si" id="si-pts">↕</span></th>
           <th data-col="ptsChg" onclick="sortBy('ptsChg')" style="text-align:right;">Chg <span class="si" id="si-ptsChg">↕</span></th>
 
-          <th class="landscape-only" data-col="ptsBF" onclick="sortBy('ptsBF')" style="text-align:right;">Pts B/F <span class="si" id="si-ptsBF">↕</span></th>
-          <th class="landscape-only" data-col="hcpBF" onclick="sortBy('hcpBF')" style="text-align:right;">Hcp B/F <span class="si" id="si-hcpBF">↕</span></th>
-          <th class="landscape-only" data-col="hcpChg" onclick="sortBy('hcpChg')" style="text-align:right;">Hcp Chg <span class="si" id="si-hcpChg">↕</span></th>
+          <th class="landscape-only" data-col="hcpBF" onclick="sortBy('hcpBF')" style="text-align:right;">HI B/F <span class="si" id="si-hcpBF">↕</span></th>
+          <th class="landscape-only" data-col="hcpChg" onclick="sortBy('hcpChg')" style="text-align:right;">HI Chg <span class="si" id="si-hcpChg">↕</span></th>
+          <th class="landscape-only" data-col="hcp" onclick="sortBy('hcp')" style="text-align:right;">HI Cur <span class="si" id="si-hcp">↕</span></th>
 
         </tr>
       </thead>
@@ -434,7 +434,7 @@ function sortBy(col) {
 }
 
 function render() {
-  const cols = ['pos','name','rounds','pts','ptsChg','ptsBF','hcpBF','hcpChg'];
+  const cols = ['pos','name','rounds','pts','ptsChg','hcpBF','hcpChg','hcp'];
   cols.forEach(c => {
     const si = document.getElementById('si-' + c);
     const th = document.querySelector(`[data-col="${c}"]`);
@@ -479,9 +479,9 @@ function render() {
       <td style="text-align:right;">${p.rounds}</td>
       <td style="text-align:right; font-weight:500;">${p.pts > 0 ? p.pts.toFixed(2) : '—'}</td>
       <td style="text-align:right; color:${p.ptsChg > 0 ? '#2d6a4f' : p.ptsChg < 0 ? '#991b1b' : 'var(--text-muted)'};">${p.ptsChg === 0 ? '—' : (p.ptsChg > 0 ? '+' : '') + p.ptsChg.toFixed(2)}</td>
-      <td class="landscape-only" style="text-align:right;">${p.ptsBF.toFixed(2)}</td>
       <td class="landscape-only" style="text-align:right;">${p.hcpBF.toFixed(1)}</td>
       <td class="landscape-only" style="text-align:right; color:${p.hcpChg > 0 ? '#2d6a4f' : p.hcpChg < 0 ? '#991b1b' : 'var(--text-muted)'};">${p.hcpChg === 0 ? '—' : (p.hcpChg > 0 ? '+' : '') + p.hcpChg.toFixed(1)}</td>
+      <td class="landscape-only" style="text-align:right;">${p.hcp.toFixed(1)}</td>
     </tr>`;
   }).join('');
 }
