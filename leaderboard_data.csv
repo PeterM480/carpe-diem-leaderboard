@@ -1,17 +1,17 @@
-Pos Now,Pos Prev,Player Name,Carpe Diem Points,Handicap Index
-1,1,"Kerns, Sean",403.41,9.1
-2,2,"Jones, Roger",373.28,10.6
-3,3,"M'Crystal, Richard",362.03,20.5
-4,4,"Mayor, Anthony",347.02,13.8
-5,5,"Montgomery, Mike",342.23,11.8
-6,6,"Mellor, Peter",329.74,24.3
-7,7,"Kenny, Chris",312.37,13.0
-8,8,"van Rensburg, Adrian",254.68,12.8
-9,9,"McAuley, Campbell",234.01,7.6
-10,10,"McAuley, Mike",118.73,20.3
-11,11,"Ebbetts, Ben",115.05,2.8
-12,12,"McCarthy, Benedict",94.5,13.0
-13,13,"Skelton, Craig",37.0,19.2
-14,14,"Mellor, Daniel",0.0,18.8
-15,15,"M'Crystal, Cameron",0.0,9.4
-16,16,"McAuley, Roddy",0.0,23.5
+Pos Now,Pos Prev,Player Name,Carpe Diem Points,Handicap Index,Rounds Played,Points BF,Points Chg,Hcp BF,Hcp Chg
+1,1,"Kerns, Sean",403.41,9.1,65,403.41,0.0,8.2,0.9
+2,2,"Jones, Roger",373.28,10.6,33,373.28,-0.003,10.6,0.0
+3,3,"M'Crystal, Richard",362.03,20.5,20,362.03,0.0,20.5,0.0
+4,4,"Mayor, Anthony",347.02,13.8,19,347.02,-0.002,13.8,0.0
+5,5,"Montgomery, Mike",342.23,11.8,17,342.23,0.0,11.4,0.4
+6,6,"Mellor, Peter",329.74,24.3,25,329.74,0.0,23.9,0.4
+7,7,"Kenny, Chris",312.37,13.0,9,312.37,0.0,13.0,0.0
+8,8,"van Rensburg, Adrian",254.68,12.8,9,254.68,0.0,14.2,0.6
+9,9,"McAuley, Campbell",234.01,7.6,7,234.01,0.0,7.9,-0.3
+10,10,"McAuley, Mike",118.73,20.3,4,118.73,0.0,20.2,0.1
+11,11,"Ebbetts, Ben",115.05,2.8,3,115.05,0.0,2.8,0.0
+12,12,"McCarthy, Benedict",94.5,13.0,3,94.5,0.0,13.0,0.0
+13,13,"Skelton, Craig",37.0,19.2,1,37.0,0.0,19.9,-0.7
+14,14,"Mellor, Daniel",0.0,18.8,0,0.0,0.0,19.0,-0.2
+15,15,"M'Crystal, Cameron",0.0,9.4,0,0.0,0.0,9.4,0.0
+16,16,"McAuley, Roddy",0.0,23.5,0,0.0,0.0,24.0,-0.5

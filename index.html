@@ -215,6 +215,13 @@
 
 
 
+  .landscape-only { display: none; }
+  @media (max-width: 600px) and (orientation: landscape) {
+    .landscape-only { display: table-cell; }
+    .portrait-hide  { display: none; }
+    table { font-size: 0.7rem; }
+    td, thead th { padding: 7px 6px; }
+  }
   @media (max-width: 600px) {
     body { padding: 1rem 0.5rem; }
     .header h1 { font-size: 1.4rem; }
@@ -306,6 +313,11 @@
           <th data-col="pts" onclick="sortBy('pts')" style="text-align:right;">Points <span class="si" id="si-pts">↕</span></th>
           <th data-col="hcp" onclick="sortBy('hcp')" style="text-align:right;">H.Idx <span class="si" id="si-hcp">↕</span></th>
           <th data-col="gap" onclick="sortBy('gap')" style="text-align:right;">Gap <span class="si" id="si-gap">↕</span></th>
+          <th class="landscape-only" data-col="rounds" onclick="sortBy('rounds')" style="text-align:right;">Rnds <span class="si" id="si-rounds">↕</span></th>
+          <th class="landscape-only" data-col="ptsBF" onclick="sortBy('ptsBF')" style="text-align:right;">Pts B/F <span class="si" id="si-ptsBF">↕</span></th>
+          <th class="landscape-only" data-col="ptsChg" onclick="sortBy('ptsChg')" style="text-align:right;">Pts Chg <span class="si" id="si-ptsChg">↕</span></th>
+          <th class="landscape-only" data-col="hcpBF" onclick="sortBy('hcpBF')" style="text-align:right;">Hcp B/F <span class="si" id="si-hcpBF">↕</span></th>
+          <th class="landscape-only" data-col="hcpChg" onclick="sortBy('hcpChg')" style="text-align:right;">Hcp Chg <span class="si" id="si-hcpChg">↕</span></th>
 
         </tr>
       </thead>
@@ -363,11 +375,16 @@ async function loadData() {
     const text = await res.text();
     const rows = parseCSV(text);
     allPlayers = rows.map(r => ({
-      pos:  parseInt(r['Pos Now'] || r['Pos'] || 0),
-      prev: parseInt(r['Pos Prev'] || r['Prev'] || 0),
-      name: r['Player Name'] || r['Player'] || '',
-      pts:  parseFloat(r['Carpe Diem Points'] || r['Points'] || 0),
-      hcp:  parseFloat(r['Handicap Index'] || r['Hcp'] || 0),
+      pos:    parseInt(r['Pos Now'] || r['Pos'] || 0),
+      prev:   parseInt(r['Pos Prev'] || r['Prev'] || 0),
+      name:   r['Player Name'] || r['Player'] || '',
+      pts:    parseFloat(r['Carpe Diem Points'] || r['Points'] || 0),
+      hcp:    parseFloat(r['Handicap Index'] || r['Hcp'] || 0),
+      rounds: parseInt(r['Rounds Played'] || 0),
+      ptsBF:  parseFloat(r['Points BF'] || 0),
+      ptsChg: parseFloat(r['Points Chg'] || 0),
+      hcpBF:  parseFloat(r['Hcp BF'] || 0),
+      hcpChg: parseFloat(r['Hcp Chg'] || 0),
     })).filter(p => p.name);
     allPlayers.forEach(p => p.move = p.prev - p.pos);
     const topPts = Math.max(...allPlayers.map(p => p.pts));
@@ -406,7 +423,7 @@ function sortBy(col) {
 }
 
 function render() {
-  const cols = ['pos','name','pts','hcp','gap'];
+  const cols = ['pos','name','pts','hcp','gap','rounds','ptsBF','ptsChg','hcpBF','hcpChg'];
   cols.forEach(c => {
     const si = document.getElementById('si-' + c);
     const th = document.querySelector(`[data-col="${c}"]`);
@@ -451,6 +468,11 @@ function render() {
       <td class="pts-cell" style="text-align:right;">${ptsHtml}</td>
       <td class="hcp-cell">${p.hcp.toFixed(1)}</td>
       <td class="gap-cell" style="text-align:right; color: var(--text-muted); font-size:0.85rem;">${p.gap === null ? '—' : p.gap === 0 ? '<span style=\"color:var(--gold);font-weight:500;\">Leader</span>' : '-' + p.gap.toFixed(2)}</td>
+      <td class="landscape-only" style="text-align:right;">${p.rounds}</td>
+      <td class="landscape-only" style="text-align:right;">${p.ptsBF.toFixed(2)}</td>
+      <td class="landscape-only" style="text-align:right; color:${p.ptsChg > 0 ? '#2d6a4f' : p.ptsChg < 0 ? '#991b1b' : 'var(--text-muted)'};">${p.ptsChg === 0 ? '—' : (p.ptsChg > 0 ? '+' : '') + p.ptsChg.toFixed(3)}</td>
+      <td class="landscape-only" style="text-align:right;">${p.hcpBF.toFixed(1)}</td>
+      <td class="landscape-only" style="text-align:right; color:${p.hcpChg > 0 ? '#2d6a4f' : p.hcpChg < 0 ? '#991b1b' : 'var(--text-muted)'};">${p.hcpChg === 0 ? '—' : (p.hcpChg > 0 ? '+' : '') + p.hcpChg.toFixed(1)}</td>
     </tr>`;
   }).join('');
 }
