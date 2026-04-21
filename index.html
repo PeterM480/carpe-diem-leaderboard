@@ -239,6 +239,21 @@
     .arrow { font-size: 0.6rem; }
   }
 
+  .milestone-strip {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    padding: 6px 0 10px;
+    letter-spacing: 0.01em;
+  }
+  .milestone-strip span {
+    color: var(--green-dark);
+    font-weight: 600;
+    font-style: normal;
+  }
+
   /* Loading / error states */
   .state-msg {
     text-align: center;
@@ -291,6 +306,10 @@
   </div>
 
 
+
+  <div class="milestone-strip" id="milestone-strip" style="display:none;">
+    <span id="milestone-leader">—</span> has led for <span id="milestone-weeks">—</span> weeks
+  </div>
 
   <div class="season-bar">
     <div class="season-item">
@@ -392,11 +411,12 @@ async function loadData() {
       rounds: parseInt(r['Rounds Played'] || 0),
       ptsBF:  parseFloat(r['Points BF'] || 0),
       ptsChg: parseFloat(r['Points Chg'] || 0),
-      hcpBF:  parseFloat(r['Hcp BF'] || 0),
-      hcpChg: parseFloat(r['Hcp Chg'] || 0),
+      hcpBF:   parseFloat(r['Hcp BF'] || 0),
+      hcpChg:  parseFloat(r['Hcp Chg'] || 0),
       lowPts:  r['Low Pts'] || '',
       highPts: r['High Pts'] || '',
       lastCard: r['Last Card'] || '',
+      daysAtTop: parseInt(r['Days At Top'] || 0),
     })).filter(p => p.name);
     allPlayers.forEach(p => p.move = p.prev - p.pos);
 
@@ -428,6 +448,18 @@ function populateBanner() {
     document.getElementById('leader-gap').textContent = gap + ' pts';
   }
   document.getElementById('leader-banner').style.display = 'flex';
+
+  const daysEl = document.getElementById('milestone-days-val');
+  const stripEl = document.getElementById('milestone-strip');
+  const weeksEl = document.getElementById('milestone-weeks');
+  const mlEl = document.getElementById('milestone-leader');
+  if (stripEl && weeksEl && mlEl) {
+    const days = parseInt(leader.daysAtTop || 0);
+    const weeks = days > 0 ? Math.floor(days / 7) : 0;
+    mlEl.textContent = leader.name;
+    weeksEl.textContent = weeks;
+    if (days > 0) stripEl.style.display = 'block';
+  }
 }
 
 
