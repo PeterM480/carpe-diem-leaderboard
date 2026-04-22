@@ -254,6 +254,29 @@
     font-style: normal;
   }
 
+  @media (orientation: landscape) and (max-width: 900px) {
+    .table-wrap { overflow-x: auto; }
+    table { table-layout: auto; }
+    td.pos-cell, th[data-col="pos"] {
+      position: sticky; left: 0; z-index: 2;
+      background: #fff;
+    }
+    td.name-cell, th[data-col="name"] {
+      position: sticky; left: 52px; z-index: 2;
+      background: #fff;
+      border-right: 1px solid var(--border);
+    }
+    tr.rank-1 td.pos-cell,
+    tr.rank-1 td.name-cell { background: #fffbf0; }
+    tr:nth-child(even):not(.rank-1) td.pos-cell,
+    tr:nth-child(even):not(.rank-1) td.name-cell { background: #fafaf8; }
+    tr:hover td.pos-cell,
+    tr:hover td.name-cell { background: var(--row-hover); }
+    th[data-col="pos"], th[data-col="name"] {
+      background: #fafaf8; z-index: 3;
+    }
+  }
+
   /* Loading / error states */
   .state-msg {
     text-align: center;
