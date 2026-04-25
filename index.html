@@ -205,7 +205,7 @@
     margin-bottom: 1.25rem;
     color: #fff;
   }
-  .season-left { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+  .season-left { display: flex; flex-direction: column; justify-content: center; flex-shrink: 0; min-width: 120px; padding-right: 4px; }
   .season-label { display: block; font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-top: 2px; }
   .season-val { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 600; color: #a8c8e8; }
   .season-divider { width: 1px; background: rgba(255,255,255,0.15); flex-shrink: 0; }
@@ -340,15 +340,10 @@
 
   <div class="season-bar">
     <div class="season-left">
-      <div>
-        <div class="season-val" id="shield-holder">—</div>
-        <div class="season-label">Shield holder</div>
-      </div>
-      <div class="season-divider" style="height:36px;"></div>
-      <div>
-        <div class="season-val" id="season-end-date">—</div>
-        <div class="season-label">Season ends</div>
-      </div>
+      <div class="season-val" id="shield-holder">—</div>
+      <div class="season-label">Shield holder</div>
+      <div class="season-val" style="margin-top:6px;" id="season-end-date">—</div>
+      <div class="season-label">Season ends</div>
     </div>
     <div class="season-divider" style="height:auto; align-self:stretch;"></div>
     <div class="season-comment">
