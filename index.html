@@ -197,18 +197,20 @@
 
   .season-bar {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    align-items: stretch;
+    gap: 14px;
     background: #2c3e50;
     border-radius: 10px;
-    padding: 10px 16px;
+    padding: 12px 16px;
     margin-bottom: 1.25rem;
     color: #fff;
   }
-  .season-item { flex: 1; text-align: center; }
+  .season-left { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
   .season-label { display: block; font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-top: 2px; }
   .season-val { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 600; color: #a8c8e8; }
-  .season-divider { width: 1px; background: rgba(255,255,255,0.15); height: 28px; flex-shrink: 0; }
+  .season-divider { width: 1px; background: rgba(255,255,255,0.15); flex-shrink: 0; }
+  .season-comment { flex: 1; display: flex; align-items: center; padding-left: 4px; }
+  .season-comment-text { font-size: 0.8rem; color: rgba(255,255,255,0.75); font-style: italic; line-height: 1.5; }
 
   .rank-1 td { background: #fffbf0; }
   .rank-1:hover td { background: #fff6e0; }
@@ -337,19 +339,20 @@
   </div>
 
   <div class="season-bar">
-    <div class="season-item">
-      <div class="season-val" id="shield-holder">Sean Kerns</div>
-      <div class="season-label">Shield holder</div>
+    <div class="season-left">
+      <div>
+        <div class="season-val" id="shield-holder">—</div>
+        <div class="season-label">Shield holder</div>
+      </div>
+      <div class="season-divider" style="height:36px;"></div>
+      <div>
+        <div class="season-val" id="season-end-date">—</div>
+        <div class="season-label">Season ends</div>
+      </div>
     </div>
-    <div class="season-divider"></div>
-    <div class="season-item">
-      <div class="season-val" id="season-end-date">—</div>
-      <div class="season-label">Season ends</div>
-    </div>
-    <div class="season-divider"></div>
-    <div class="season-item">
-      <div class="season-val" id="season-days">—</div>
-      <div class="season-label">Days remaining</div>
+    <div class="season-divider" style="height:auto; align-self:stretch;"></div>
+    <div class="season-comment">
+      <div class="season-comment-text" id="season-comment">—</div>
     </div>
   </div>
 
@@ -444,11 +447,14 @@ async function loadData() {
       daysAtTop: parseInt(r['Days At Top'] || 0),
       leadPrev:  parseFloat(r['Lead Prev'] || 0),
       leadNow:   parseFloat(r['Lead Now'] || 0),
+      comment:   r['Comment'] || '',
     })).filter(p => p.name);
     allPlayers.forEach(p => p.move = p.prev - p.pos);
 
     const shEl = document.getElementById('shield-holder');
     if (shEl && allPlayers[0]) shEl.textContent = allPlayers[0].name;
+    const commentEl = document.getElementById('season-comment');
+    if (commentEl && allPlayers[0]) commentEl.textContent = allPlayers[0].comment || '';
     populateBanner();
     render();
     document.getElementById('footer-updated').textContent =
@@ -559,13 +565,10 @@ function render() {
 function updateSeasonCountdown() {
   const now = new Date();
   let endYear = now.getFullYear();
-  if (now.getMonth() >= 7) endYear += 1; // August (0-indexed) or later → next year
-  const endDate = new Date(endYear, 6, 31); // July 31
-  const diffMs = endDate - now;
-  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  if (now.getMonth() >= 7) endYear += 1;
+  const endDate = new Date(endYear, 6, 31);
   document.getElementById('season-end-date').textContent =
     endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-  document.getElementById('season-days').textContent = diffDays.toLocaleString();
 }
 updateSeasonCountdown();
 
