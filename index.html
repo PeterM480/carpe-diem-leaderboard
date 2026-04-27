@@ -60,6 +60,8 @@
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
+  .header-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+  .header-meta span { color: var(--green-dark); font-weight: 500; }
 
   /* Leader banner */
   .leader-banner {
@@ -308,6 +310,7 @@
   <div class="header">
     <h1>Carpe Diem Shield</h1>
     <p class="header-sub">Golf League Leaderboard</p>
+    <p class="header-meta">Current Season <span id="meta-season">—</span> &nbsp;·&nbsp; All games loaded up to <span id="meta-loaded">—</span></p>
   </div>
 
   <div class="leader-banner" id="leader-banner" style="display:none;">
@@ -443,11 +446,17 @@ async function loadData() {
       leadPrev:  parseFloat(r['Lead Prev'] || 0),
       leadNow:   parseFloat(r['Lead Now'] || 0),
       comment:   r['Comment'] || '',
+      season:    r['Season'] || '',
+      lastLoaded: r['Last Loaded'] || '',
     })).filter(p => p.name);
     allPlayers.forEach(p => p.move = p.prev - p.pos);
 
     const shEl = document.getElementById('shield-holder');
     if (shEl && allPlayers[0]) shEl.textContent = allPlayers[0].name;
+    const seasonEl = document.getElementById('meta-season');
+    if (seasonEl && allPlayers[0]) seasonEl.textContent = allPlayers[0].season;
+    const loadedEl = document.getElementById('meta-loaded');
+    if (loadedEl && allPlayers[0]) loadedEl.textContent = allPlayers[0].lastLoaded;
     const commentEl = document.getElementById('season-comment');
     if (commentEl && allPlayers[0]) commentEl.textContent = allPlayers[0].comment || '';
     populateBanner();
