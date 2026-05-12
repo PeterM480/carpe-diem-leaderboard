@@ -318,6 +318,10 @@
       <div class="leader-pts-num" id="leader-gap" style="font-size:0.95rem;">—</div>
       <div class="leader-pts-label">Lead Now</div>
     </div>
+    <div class="leader-pts" style="min-width:28px; text-align:center;">
+      <div id="lead-trend" style="font-size:1.4rem; line-height:1;">—</div>
+      <div class="leader-pts-label">&nbsp;</div>
+    </div>
   </div>
 
 
@@ -478,6 +482,12 @@ function populateBanner() {
   }
   if (leader.leadPrev > 0) {
     document.getElementById('leader-gap-prev').textContent = leader.leadPrev.toFixed(2) + ' pts';
+  }
+  const trendEl = document.getElementById('lead-trend');
+  if (trendEl && leader.leadNow !== undefined && leader.leadPrev !== undefined) {
+    if (leader.leadNow > leader.leadPrev)      { trendEl.textContent = '▲'; trendEl.style.color = '#4ade80'; }
+    else if (leader.leadNow < leader.leadPrev) { trendEl.textContent = '▼'; trendEl.style.color = '#f87171'; }
+    else                                        { trendEl.textContent = '='; trendEl.style.color = '#c9a84c'; }
   }
   document.getElementById('leader-banner').style.display = 'flex';
 }
