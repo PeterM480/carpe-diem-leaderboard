@@ -69,7 +69,7 @@
     color: #fff;
     border-radius: 10px;
     padding: 10px 16px;
-    margin-bottom: 1.25rem;
+    margin-bottom: 6px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -243,21 +243,6 @@
     .arrow { font-size: 0.6rem; }
   }
 
-  .milestone-strip {
-    text-align: center;
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    padding: 6px 0 10px;
-    letter-spacing: 0.01em;
-  }
-  .milestone-strip span {
-    color: var(--green-dark);
-    font-weight: 600;
-    font-style: normal;
-  }
-
   .table-wrap { overflow-x: auto; }
   td.pos-cell, th[data-col="pos"] {
     position: sticky; left: 0; z-index: 2;
@@ -320,8 +305,8 @@
       <div class="leader-detail" id="leader-detail">Current leader</div>
     </div>
     <div class="leader-pts">
-      <div class="leader-pts-num" id="leader-pts">—</div>
-      <div class="leader-pts-label">CD Points</div>
+      <div class="leader-pts-num" id="leader-weeks">—</div>
+      <div class="leader-pts-label">Led for</div>
     </div>
     <div class="season-divider" style="background:rgba(255,255,255,0.15); margin: 0 4px;"></div>
     <div class="leader-pts">
@@ -336,10 +321,6 @@
   </div>
 
 
-
-  <div class="milestone-strip" id="milestone-strip" style="display:none;">
-    <span id="milestone-leader">—</span> has led for <span id="milestone-weeks">—</span> weeks
-  </div>
 
   <div class="season-bar">
     <div class="season-left">
@@ -488,7 +469,10 @@ function populateBanner() {
   const second = sorted[1];
   if (!leader) return;
   document.getElementById('leader-name').textContent = leader.name;
-  document.getElementById('leader-pts').textContent = leader.pts.toFixed(2);
+  const days = parseInt(leader.daysAtTop || 0);
+  const weeks = days > 0 ? Math.floor(days / 7) : 0;
+  const weeksEl = document.getElementById('leader-weeks');
+  if (weeksEl) weeksEl.textContent = weeks + ' wks';
   if (leader.leadNow > 0) {
     document.getElementById('leader-gap').textContent = leader.leadNow.toFixed(2) + ' pts';
   }
@@ -496,18 +480,6 @@ function populateBanner() {
     document.getElementById('leader-gap-prev').textContent = leader.leadPrev.toFixed(2) + ' pts';
   }
   document.getElementById('leader-banner').style.display = 'flex';
-
-  const daysEl = document.getElementById('milestone-days-val');
-  const stripEl = document.getElementById('milestone-strip');
-  const weeksEl = document.getElementById('milestone-weeks');
-  const mlEl = document.getElementById('milestone-leader');
-  if (stripEl && weeksEl && mlEl) {
-    const days = parseInt(leader.daysAtTop || 0);
-    const weeks = days > 0 ? Math.floor(days / 7) : 0;
-    mlEl.textContent = leader.name;
-    weeksEl.textContent = weeks;
-    if (days > 0) stripEl.style.display = 'block';
-  }
 }
 
 
