@@ -565,12 +565,6 @@ function render() {
 }
 
 function updateSeasonCountdown() {
-  const now = new Date();
-  let endYear = now.getFullYear();
-  if (now.getMonth() >= 7) endYear += 1;
-  const endDate = new Date(endYear, 6, 31);
-  document.getElementById('season-end-date').textContent =
-    endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 updateSeasonCountdown();
 
