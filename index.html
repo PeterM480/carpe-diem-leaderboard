@@ -294,8 +294,8 @@
 
   <div class="header">
     <h1>Carpe Diem Shield</h1>
-    <p class="header-sub">Golf League Leaderboard</p>
     <p class="header-meta">Current Season <span id="meta-season">—</span> &nbsp;·&nbsp; All games loaded up to <span id="meta-loaded">—</span></p>
+    <p class="header-meta" style="margin-top:4px;">Defending Champion <span id="meta-champion">—</span> &nbsp;·&nbsp; Season ends <span id="meta-season-end">—</span> in <span id="meta-days">—</span> days</p>
   </div>
 
   <div class="leader-banner" id="leader-banner" style="display:none;">
@@ -327,14 +327,7 @@
 
 
   <div class="season-bar">
-    <div class="season-left">
-      <div class="season-val" id="shield-holder">—</div>
-      <div class="season-label">Shield holder</div>
-      <div class="season-val" style="margin-top:6px;" id="season-end-date">—</div>
-      <div class="season-label">Season ends</div>
-    </div>
-    <div class="season-divider" style="height:auto; align-self:stretch;"></div>
-    <div class="season-comment">
+    <div class="season-comment" style="flex:1;">
       <div class="season-comment-text" id="season-comment">—</div>
     </div>
   </div>
@@ -442,6 +435,9 @@ async function loadData() {
       comment:   r['Comment'] || '',
       season:    r['Season'] || '',
       lastLoaded: r['Last Loaded'] || '',
+      champion:  r['Champion'] || '',
+      seasonEnd: r['Season End'] || '',
+      daysLeft:  r['Days Left'] || '',
     })).filter(p => p.name);
     allPlayers.forEach(p => p.move = p.prev - p.pos);
 
@@ -451,6 +447,12 @@ async function loadData() {
     if (seasonEl && allPlayers[0]) seasonEl.textContent = allPlayers[0].season;
     const loadedEl = document.getElementById('meta-loaded');
     if (loadedEl && allPlayers[0]) loadedEl.textContent = allPlayers[0].lastLoaded;
+    const champEl = document.getElementById('meta-champion');
+    if (champEl && allPlayers[0]) champEl.textContent = allPlayers[0].champion;
+    const seasonEndEl = document.getElementById('meta-season-end');
+    if (seasonEndEl && allPlayers[0]) seasonEndEl.textContent = allPlayers[0].seasonEnd;
+    const daysLeftEl = document.getElementById('meta-days');
+    if (daysLeftEl && allPlayers[0]) daysLeftEl.textContent = allPlayers[0].daysLeft;
     const commentEl = document.getElementById('season-comment');
     if (commentEl && allPlayers[0]) commentEl.textContent = allPlayers[0].comment || '';
     populateBanner();
