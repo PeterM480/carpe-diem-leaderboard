@@ -63,6 +63,22 @@
   .header-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
   .header-meta span { color: var(--green-dark); font-weight: 500; }
 
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f0f7f2;
+    border-left: 3px solid var(--green-mid);
+    border-radius: 0 6px 6px 0;
+    padding: 7px 14px;
+    margin-bottom: 1rem;
+    font-size: 0.82rem;
+    color: var(--green-dark);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .status-bar span { font-weight: 700; }
+
   /* Leader banner */
   .leader-banner {
     background: var(--green-dark);
@@ -298,6 +314,8 @@
     <p class="header-meta" style="margin-top:4px;">Defending Champion <span id="meta-champion">—</span></p>
   </div>
 
+  <div class="status-bar">League Status as at <span id="status-date">—</span></div>
+
   <div class="leader-banner" id="leader-banner" style="display:none;">
     <div class="leader-crown"></div>
     <div class="leader-text">
@@ -455,6 +473,8 @@ async function loadData() {
     if (daysLeftEl && allPlayers[0]) daysLeftEl.textContent = allPlayers[0].daysLeft;
     const commentEl = document.getElementById('season-comment');
     if (commentEl && allPlayers[0]) commentEl.textContent = allPlayers[0].comment || '';
+    const statusEl = document.getElementById('status-date');
+    if (statusEl && allPlayers[0]) statusEl.textContent = allPlayers[0].lastLoaded;
     populateBanner();
     render();
     document.getElementById('footer-updated').textContent =
